@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "heartbeat.hpp"
 #include "imu.hpp"
+#include "wifi.hpp"
 
 float x, y, z;
 
@@ -9,6 +10,8 @@ void setup(){
   pinMode(LED_BUILTIN, OUTPUT);
 
   imu_init();
+
+  wifiSetup();
 
   //calibrate();
 
@@ -21,5 +24,8 @@ void loop()
   //mahony();
   float x, y, z;
   readGyro(x, y, z);
+
+  sendMessage('k');
+  delay(10000);
 }
 
