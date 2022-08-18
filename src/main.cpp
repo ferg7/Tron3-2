@@ -1,9 +1,25 @@
 #include <Arduino.h>
+#include "heartbeat.hpp"
+#include "imu.hpp"
 
-void setup() {
-  // put your setup code here, to run once:
+float x, y, z;
+
+//want a watchdog
+void setup(){
+  pinMode(LED_BUILTIN, OUTPUT);
+
+  imu_init();
+
+  //calibrate();
+
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
+void loop()
+{
+  heartbeat(500); //used to debug
+  //madgwick();
+  //mahony();
+  float x, y, z;
+  readGyro(x, y, z);
 }
+
