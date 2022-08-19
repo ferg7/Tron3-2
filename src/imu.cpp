@@ -3,29 +3,26 @@
 #include <MadgwickAHRS.h>
 //#include "kalman.hpp"
 
-
 SF fusion;
 Madgwick filter;
-// Kalman kalman;
 
-float gx, gy, gz, ax, ay, az, mx, my, mz;
-float pitch, roll, yaw;
+float gx, gy, gz, ax, ay, az;
+float x, y, z;
 float deltat;
 
-float original;
-
-void imu_init(){
+void imu_init()
+{
     if(!IMU.begin()){
         Serial.println("Failed to initialise");
         return;
     }
-    Serial.begin(115200); 
-    //filter.begin(1);//altering this helps
+    float sample_rate = IMU.accelerationSampleRate();
+    filter.begin(sample_rate);
     delay(1000);
 }
 
-void readGyro(float x, float y, float z){
-
+void readGyro()
+{
     if (IMU.gyroscopeAvailable()) {
         IMU.readGyroscope(x, y, z);
 
@@ -37,8 +34,8 @@ void readGyro(float x, float y, float z){
     }
 }
 
-void readAccel(float x, float y, float z){
-
+void readAccel()
+{
     if (IMU.accelerationAvailable()) {
         IMU.readAcceleration(x, y, z);
 
@@ -48,7 +45,6 @@ void readAccel(float x, float y, float z){
         Serial.print('\t');
         Serial.println(z);
     }
-
 }
 
 void calibrate()
@@ -81,10 +77,10 @@ void calibrate()
     Serial.print("Original ="); Serial.println(original);
     delay(10);
     
-
 }
 
-void mahony()
+
+void mahony(float *roll, float *pitch, float *yaw)
 {
     if (IMU.accelerationAvailable()) {
         IMU.readAcceleration(ax, ay, az);
@@ -106,17 +102,11 @@ void mahony()
     roll = fusion.getRoll();    //you could also use getRollRadians() ecc
     yaw = fusion.getYaw();
     //float current_yaw = yaw;
-
-    Serial.print("Pitch:\t"); Serial.println(pitch);
-    Serial.print("Roll:\t"); Serial.println(roll);
-    Serial.print("Yaw:\t"); Serial.println(yaw);
-    Serial.println();
-
 }
 
 
-//Doesn't really work ?  Better when sampling rate changed?
-void madgwick(){
+void madgwick(float *roll, float *pitch, float *yaw)
+{
     if (IMU.accelerationAvailable()) {
         IMU.readAcceleration(ax, ay, az);
     }
@@ -127,16 +117,9 @@ void madgwick(){
     //may need metro timer 
     filter.updateIMU(gx, gy, gz, ax, ay, az);
 
+    //returns euler angles in world frame
     pitch = filter.getPitch();
     roll = filter.getRoll();    //you could also use getRollRadians() ecc
     yaw = filter.getYaw();
 
-    Serial.print("Pitch:\t"); Serial.println(pitch);
-    Serial.print("Roll:\t"); Serial.println(roll);
-    Serial.print("Yaw:\t"); Serial.println(yaw);
-    Serial.println();
 }
-
-// void kalman(){
-
-// }

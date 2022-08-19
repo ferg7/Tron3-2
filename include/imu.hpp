@@ -4,12 +4,12 @@
 
 void imu_init();
 
-void readGyro(float x, float y, float z);
+void readGyro();
 
-void readAccel(float x, float y, float z);
+void readAccel();
 
-void mahony();
+void mahony(float *roll, float *pitch, float *yaw);
 
-void madgwick();
+void madgwick(float *roll, float *pitch, float *yaw);
 
 void calibrate();
