@@ -1,17 +1,19 @@
 #include <Arduino.h>
 #include "hardware/heartbeat.hpp"
-#include "door_open.hpp"
+#include "door.hpp"
 
+Door door;
 
 void setup()
 {
   pinMode(LED_BUILTIN, OUTPUT);
-  door_init();
-
+  Serial.begin(115200); 
+  imu_init();
 }
+
 
 void loop()
 {
   heartbeat(500); //used to debug
-  door_open();
+  door.run();
 }
