@@ -21,7 +21,7 @@ void imu_init(){
     }
     Serial.begin(115200); 
     //filter.begin(1);//altering this helps
-    delay(1000);
+    //delay(1000);
 }
 
 void readGyro(float x, float y, float z){

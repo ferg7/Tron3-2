@@ -2,8 +2,11 @@
 #include "heartbeat.hpp"
 #include "imu.hpp"
 #include "wifi.hpp"
+#include "knock.hpp"
 
 float x, y, z;
+float baselineAcc[3] = {0};
+boolean knock = false;
 
 //want a watchdog
 void setup(){
@@ -11,7 +14,10 @@ void setup(){
 
   imu_init();
 
-  wifiSetup();
+  //wifiSetup();
+
+  knockCalibrate(baselineAcc);
+  
 
   //calibrate();
 
@@ -19,13 +25,24 @@ void setup(){
 
 void loop()
 {
-  heartbeat(500); //used to debug
+  //heartbeat(500); //used to debug
+  //Serial.print("baseline is main ");
   //madgwick();
   //mahony();
-  float x, y, z;
-  readGyro(x, y, z);
+  //float x, y, z;
+  // readGyro(x, y, z);
+  //float results[200] = {0};
+  //bufferResults(results, 200);
+  //sendMessage('k');
+  //writeAcc();
+  //detectKnock(baselineAcc);
+  knock = detectKnock(baselineAcc);
+  if (knock){
+    Serial.print('Finish Program');
+  }
+  
 
-  sendMessage('k');
-  delay(10000);
+  // sendMessage('k');
+  // delay(1000);
 }
 
