@@ -1,6 +1,6 @@
 #include <Arduino.h>
-#include "heartbeat.hpp"
-#include "imu.hpp"
+#include "hardware/heartbeat.hpp""
+#include "hardware/imu.hpp"
 
 float x, y, z;
 float roll, pitch, yaw;
