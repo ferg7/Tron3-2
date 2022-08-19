@@ -1,9 +1,12 @@
 #include <Arduino.h>
-#include "hardware/heartbeat.hpp""
+#include "hardware/heartbeat.hpp"
+#include "hardware/ultrasonic.hpp"
 #include "hardware/imu.hpp"
 
 float x, y, z;
 float roll, pitch, yaw;
+
+unsigned long distance;
 
 //want a watchdog
 void setup()
@@ -25,7 +28,10 @@ void loop()
   Serial.print("Roll:\t"); Serial.println(roll);
   Serial.print("Yaw:\t"); Serial.println(yaw);
   Serial.println();
-
   //can send this data to visualiser.
+
+  distance = sonar_ping();
+  Serial.print("Sonar Distance:\t"); Serial.println(distance);
+
 }
 
