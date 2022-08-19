@@ -19,6 +19,6 @@ class Door
 
         unsigned long distance;
 
-        void door_open();
         void door_state();
+        void knock();
 };

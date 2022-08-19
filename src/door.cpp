@@ -14,6 +14,7 @@ Door::~Door()
 void Door::run()
 {
     door_state();
+    knock();
     
     Serial.print("Pitch:\t"); Serial.println(pitch);
     Serial.print("Roll:\t"); Serial.println(roll);
@@ -28,8 +29,14 @@ void Door::door_state()
 {
     //madgwick(&roll, &pitch, &yaw);
     mahony(&roll, &pitch, &yaw);
-        //used for door knock not door open ?
+    //used for door knock not door open ?
+}
+
+void Door::knock()
+{
     distance = sonar_ping();
+
+    //add imu knock detection here 
 }
 
 bool Door::person_detected()
