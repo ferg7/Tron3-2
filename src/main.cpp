@@ -1,37 +1,17 @@
 #include <Arduino.h>
 #include "hardware/heartbeat.hpp"
-#include "hardware/ultrasonic.hpp"
-#include "hardware/imu.hpp"
+#include "door_open.hpp"
 
-float x, y, z;
-float roll, pitch, yaw;
 
-unsigned long distance;
-
-//want a watchdog
 void setup()
 {
   pinMode(LED_BUILTIN, OUTPUT);
-  Serial.begin(115200); 
+  door_init();
 
-  imu_init();
 }
 
 void loop()
 {
   heartbeat(500); //used to debug
-  
-  //madgwick(&roll, &pitch, &yaw);
-  mahony(&roll, &pitch, &yaw);
-  
-  Serial.print("Pitch:\t"); Serial.println(pitch);
-  Serial.print("Roll:\t"); Serial.println(roll);
-  Serial.print("Yaw:\t"); Serial.println(yaw);
-  Serial.println();
-  //can send this data to visualiser.
-
-  distance = sonar_ping();
-  Serial.print("Sonar Distance:\t"); Serial.println(distance);
-
+  door_open();
 }
-
