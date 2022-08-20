@@ -72,9 +72,9 @@ void calibrate()
         sum += fusion.getYaw();
     }
 
-    original = sum/10;
+    //original = sum/10;
     
-    Serial.print("Original ="); Serial.println(original);
+    //Serial.print("Original ="); Serial.println(original);
     delay(10);
     
 }
@@ -97,10 +97,14 @@ void mahony(float *roll, float *pitch, float *yaw)
     //choose only one of these two:
     fusion.MahonyUpdate(gx, gy, gz, ax, ay, az, deltat);  //mahony is suggested if there isn't the mag and the mcu is slow
     //fusion.MadgwickUpdate(gx, gy, gz, ax, ay, az, mx, my, mz, deltat);  //else use the magwick, it is slower but more accurate
+    float p, r, y;
+    p = fusion.getPitch();
+    r = fusion.getRoll();    //you could also use getRollRadians() ecc
+    y = fusion.getYaw();
 
-    pitch = fusion.getPitch();
-    roll = fusion.getRoll();    //you could also use getRollRadians() ecc
-    yaw = fusion.getYaw();
+    *pitch = p;
+    *roll = r;
+    *yaw = y;
     //float current_yaw = yaw;
 }
 
@@ -117,9 +121,14 @@ void madgwick(float *roll, float *pitch, float *yaw)
     //may need metro timer 
     filter.updateIMU(gx, gy, gz, ax, ay, az);
 
+    float p, r, y;
     //returns euler angles in world frame
-    pitch = filter.getPitch();
-    roll = filter.getRoll();    //you could also use getRollRadians() ecc
-    yaw = filter.getYaw();
+    p = filter.getPitch();
+    r = filter.getRoll();    //you could also use getRollRadians() ecc
+    y = filter.getYaw();
+
+    *pitch = p;
+    *roll = r;
+    *yaw = y;
 
 }

@@ -30,6 +30,8 @@ void Door::door_state()
     //madgwick(&roll, &pitch, &yaw);
     mahony(&roll, &pitch, &yaw);
     //used for door knock not door open ?
+
+    //add detection of open or clsoed her e
 }
 
 void Door::knock()
