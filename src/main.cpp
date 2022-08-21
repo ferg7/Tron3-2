@@ -7,10 +7,14 @@
 float x, y, z;
 float baselineAcc[3] = {0};
 boolean knock = false;
+const int buzzer = 2;
+const int micPin = 3;
 
 //want a watchdog
 void setup(){
   pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(buzzer, OUTPUT);
+  pinMode(micPin, INPUT);
 
   imu_init();
 
@@ -33,16 +37,19 @@ void loop()
   // readGyro(x, y, z);
   //float results[200] = {0};
   //bufferResults(results, 200);
-  //sendMessage('k');
+  // sendMessage('k');
   //writeAcc();
-  //detectKnock(baselineAcc);
+  
   knock = detectKnock(baselineAcc);
   if (knock){
-    Serial.print('Finish Program');
+    Serial.print("Finish Program");
+    doorBell(buzzer);
+    doorBell(buzzer);
+    doorBell(buzzer);
   }
   
 
   // sendMessage('k');
-  // delay(1000);
+ 
 }
 

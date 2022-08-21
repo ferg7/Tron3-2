@@ -6,6 +6,10 @@ float * bufferResults(float *results, int count);
 
 float * knockCalibrate(float *baselineAcc);
 
-boolean detectKnockVibration(float * baselineAcc);
+boolean detectVibration(float * baselineAcc);
+
+boolean detectMic();
 
 boolean detectKnock(float * baselineAcc);
+
+void doorBell(int buzzer);

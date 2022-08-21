@@ -37,7 +37,7 @@ float * knockCalibrate(float *baselineAcc){
     //  baselineAcc[2] =  z;
 }
 
-boolean detectKnockVibration(float *baselineAcc){
+boolean detectVibration(float *baselineAcc){
     
     //detect first knock
     int count = 100;
@@ -45,12 +45,19 @@ boolean detectKnockVibration(float *baselineAcc){
     float avg_x_dif = 0, avg_y_dif = 0, avg_z_dif=0;
     float x_perc_change = 0,y_perc_change = 0 ,z_perc_change=0;
     float x, y, z;
+    boolean sound = 0;
+
     for(int i = 0; i < count; i++){
         IMU.readAcceleration(x, y, z);
         sum_x_dif = sum_x_dif + abs(baselineAcc[0] - x);
         sum_y_dif = sum_y_dif + abs(baselineAcc[1] - y);
         sum_z_dif = sum_z_dif + abs(baselineAcc[2] - z);
+        boolean anySound = digitalRead(3);
+        if (anySound){
+            sound = 1;   
+        }
     }
+    
 
     avg_x_dif = sum_x_dif/count;
     avg_y_dif = sum_y_dif/count;
@@ -61,31 +68,45 @@ boolean detectKnockVibration(float *baselineAcc){
     y_perc_change = abs(avg_y_dif/abs(baselineAcc[1]));
     z_perc_change = abs(avg_z_dif/abs(baselineAcc[2]));
 
-    Serial.println(x_perc_change);
+    //Serial.println(x_perc_change);
 
-    if (x_perc_change > 1){
-        return true;
+    if (x_perc_change > 1 and sound == 1){
+        return 1;
     }
     else{
-        return false;
+        return 0;
     }
 }
 
 
+void doorBell(int buzzer){
+    tone(buzzer, 330); // tone(PIN#, FREQUENCY)
+    delay(400);
+    tone(buzzer, 390);
+    delay(400);
+    tone(buzzer, 260);
+    delay(400);
+    noTone(buzzer);
+    delay(1000);
+    //https://www.npsmusicsound.com/hybridcomputermusic/an-easy-door-bell-with-arduino-uno
+}
+
+
 boolean detectKnock(float *baselineAcc){
-    boolean firstKnock =  detectKnockVibration(baselineAcc);
+    boolean firstKnock =  detectVibration(baselineAcc);
     if (firstKnock){
         long startTime = millis();
         Serial.print("first Knock ");
         delay(50);
         while (millis() - startTime  < 2000){
-            boolean secondKnock =  detectKnockVibration(baselineAcc);
+            boolean secondKnock =  detectVibration(baselineAcc);
             if (secondKnock){
                 Serial.println("second knock");
-                return true;
+                delay(50);
+                return 1;
             }
         }
-        return false;
+        return 0;
     }
 }
 
