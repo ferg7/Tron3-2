@@ -1,5 +1,5 @@
 #include "hardware/imu.hpp"
-#include <ArduinoEigen.h>
+#include <ArduinoEigenDense.h>
 
 IMUclass::IMUclass()
 {

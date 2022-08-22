@@ -6,8 +6,7 @@ class PIR
     public:
         PIR();
         ~PIR();
-        void run();
-        int getState(){return state;};
+        int run();
     private:
         int state;
         int val;

@@ -17,7 +17,7 @@ PIR::~PIR()
 
 }
 
-void PIR::run(){
+int PIR::run(){
   val = digitalRead(sensor);   // read sensor value
   if (val == HIGH) {           // check if the sensor is HIGH
     //on

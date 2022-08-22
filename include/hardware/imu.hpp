@@ -24,6 +24,6 @@ class IMUclass
         float gx, gy, gz, ax, ay, az;
         float x, y, z;
         float deltat;
-        float roll, pitch, yaw
+        float roll, pitch, yaw;
 
 };
