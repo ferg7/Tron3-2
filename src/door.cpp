@@ -1,9 +1,8 @@
- #include "door.hpp"
- 
+#include "door.hpp"
 
 Door::Door()
 {
-
+    pir = new PIR();
 }
 
 Door::~Door()
@@ -37,6 +36,11 @@ void Door::door_state()
 void Door::knock()
 {
     distance = sonar_ping();
+    int motion = pir->run();
+    if(motion == 1 && distance < 50)
+    {
+        //here is where a knock would make sense to exist
+    }
 
     //add imu knock detection here 
 }

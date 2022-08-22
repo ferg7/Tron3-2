@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include "hardware/imu.hpp"
 #include "hardware/ultrasonic.hpp"
+#include "hardware/pir.hpp"
 
 
 class Door
@@ -18,6 +19,8 @@ class Door
         float roll, pitch, yaw;
 
         unsigned long distance;
+
+        PIR *pir;
 
         void door_state();
         void knock();
