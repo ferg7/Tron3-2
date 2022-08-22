@@ -3,18 +3,23 @@
 Door::Door()
 {
     pir = new PIR();
+    imu = new IMUclass();
+
 }
 
 Door::~Door()
 {
-    
+    delete pir;
+    delete imu;
 }
 
 void Door::run()
 {
+    //imu->madgwick();
     door_state();
     knock();
     
+    //required for the visualiser
     Serial.print("Pitch:\t"); Serial.println(pitch);
     Serial.print("Roll:\t"); Serial.println(roll);
     Serial.print("Yaw:\t"); Serial.println(yaw);
@@ -26,11 +31,7 @@ void Door::run()
 
 void Door::door_state()
 {
-    //madgwick(&roll, &pitch, &yaw);
-    mahony(&roll, &pitch, &yaw);
-    //used for door knock not door open ?
-
-    //add detection of open or clsoed her e
+    
 }
 
 void Door::knock()

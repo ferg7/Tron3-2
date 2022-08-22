@@ -21,6 +21,7 @@ class Door
         unsigned long distance;
 
         PIR *pir;
+        IMUclass* imu;
 
         void door_state();
         void knock();
