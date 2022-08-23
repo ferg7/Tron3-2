@@ -16,11 +16,11 @@ void setup(){
   pinMode(buzzer, OUTPUT);
   pinMode(micPin, INPUT);
 
-  imu_init();
+  //imu_init();
 
-  //wifiSetup();
+  wifiSetup();
 
-  knockCalibrate(baselineAcc);
+  //knockCalibrate(baselineAcc);
   
 
   //calibrate();
@@ -40,16 +40,17 @@ void loop()
   // sendMessage('k');
   //writeAcc();
   
-  knock = detectKnock(baselineAcc);
-  if (knock){
-    Serial.print("Finish Program");
-    doorBell(buzzer);
-    doorBell(buzzer);
-    doorBell(buzzer);
-  }
+  // knock = detectKnock(baselineAcc);
+  // if (knock){
+  //   Serial.print("Finish Program");
+  //   doorBell(buzzer);
+  //   doorBell(buzzer);
+  //   doorBell(buzzer);
+  // }
   
+  char message[200] = {0};
+  sendMessage('k');
 
-  // sendMessage('k');
  
 }
 

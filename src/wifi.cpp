@@ -1,10 +1,15 @@
 #include "wifi.hpp"
+#include <WiFiNINA.h>
+#include <WiFiUdp.h>
+#include<string.h>  
 
 char ssid[] = "BelongBFAD13";    // your network SSID (name)
 char pass[] = "pw6ugc4bd2t7";    // your network password (use for WPA,
 int status = WL_IDLE_STATUS;
 
-WiFiServer server(80);        // port 3009
+unsigned int localPort = 2390; 
+
+WiFiUDP Udp;
 
 boolean alreadyConnected = false;
 
@@ -49,37 +54,63 @@ void wifiSetup() {
     delay(10000);
 
     // start the server:
-    server.begin();
+    Udp.begin(localPort);
 
-    // you're connected now, so print out the status:
     printWifiStatus();
+
+    connectToSocket();
   }
 
 }
 
-void sendMessage(char message) {
-  // Serial.write("Attempting to send message");
-  WiFiClient client = server.available();
-  while (client.connected()) {            // loop while the client's connected
-      if (client.available()) {             // if there's bytes to read from the client,
-        char c = client.read();             // read a byte, then
-        Serial.print(c);                    // print it out the serial monitor
-    }
-    // close the connection:
-    client.stop();
-    // Serial.println("client disconnected");
-  }
-  // if (client) {
-  //   Serial.println("Client found ");
-  //   if (!alreadyConnected) {
-  //     // clear out the input buffer:
-  //     client.flush();
-  //     alreadyConnected = true;
-  //   }
+void connectToSocket(){
+  char packetBuffer[256]; //buffer to hold incoming packet
+ // if there's data available, read a packet
+  
+  boolean connection = false;
+  while (connection==false) {
+    int packetSize = Udp.parsePacket();
+    if (packetSize) {
+    Serial.print("Received packet of size ");
+    Serial.println(packetSize);
+    Serial.print("From ");
+    IPAddress remoteIp = Udp.remoteIP();
+    Serial.print(remoteIp);
+    Serial.print(", port ");
+    Serial.println(Udp.remotePort());
 
-  //   Serial.println(client.read());
-  //   Serial.println(client);
-  //   server.write("knock", 5);
-  //   client.write("knock", 5);
-  // }
+    // read the packet into packetBufffer
+    int len = Udp.read(packetBuffer, 255);
+    if (len > 0) {
+      packetBuffer[len] = 0;
+    }
+    Serial.println("Contents:");
+    Serial.println(packetBuffer);
+    int value =strcmp(packetBuffer,"connection established");  
+    Serial.println(value);
+    delay(1000);
+    if (value == 0){
+      connection = true;
+    }
+
+    // send a reply, to the IP address and port that sent us the packet we received
+    char  ReplyBuffer[] = "connection established"; 
+    Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
+    Udp.write(ReplyBuffer);
+    delay(2000);
+    Udp.endPacket();
+  }
+}
+}
+
+
+
+void sendMessage(char message){
+ 
+    char  ReplyBuffer[] = "Knock Knock bitches";
+    // send a reply, to the IP address and port that sent us the packet we received
+    Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
+    Udp.write(ReplyBuffer);
+    Udp.endPacket();
+    delay(1000);
 }

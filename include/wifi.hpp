@@ -5,4 +5,5 @@
 
 void printWifiStatus();
 void wifiSetup();
-void sendMessage(char message);
+void sendMessage(char  message);
+void connectToSocket();
