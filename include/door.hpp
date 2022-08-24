@@ -6,6 +6,7 @@
 #include "hardware/pir.hpp"
 
 
+
 class Door
 {
     public:
@@ -18,6 +19,10 @@ class Door
     private:
         float roll, pitch, yaw;
 
+        int buzzer, micPin;
+
+        float baslineX, baslineY, BaselineZ;
+
         unsigned long distance;
 
         PIR *pir;
@@ -25,4 +30,6 @@ class Door
 
         void door_state();
         void knock();
+        void knockCalibrate();
+        void doorBell();
 };

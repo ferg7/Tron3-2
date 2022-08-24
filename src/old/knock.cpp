@@ -1,6 +1,5 @@
 #include "knock.hpp"
 #include "imu.hpp"
-#include "imu.hpp"
 #include <ctime>
 
 void writeAcc(){
@@ -19,7 +18,7 @@ float * bufferResults(float *results, int count){
 }
 
 
-float * knockCalibrate(float *baselineAcc){
+void knockCalibrate(float *baselineAcc){
     int count = 100;
     float sum_x, sum_y, sum_z = 0;
     float x, y, z;

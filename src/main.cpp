@@ -4,15 +4,10 @@
 
 #include "heartbeat.hpp"
 #include "wifi.hpp"
-#include "knock.hpp"
+
 
 Door door;
 
-float x, y, z;
-float baselineAcc[3] = {0};
-boolean knock = false;
-const int buzzer = 2;
-const int micPin = 3;
 
 void setup()
 {
