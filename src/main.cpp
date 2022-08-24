@@ -2,8 +2,8 @@
 #include "hardware/heartbeat.hpp"
 #include "door.hpp"
 
-#include "heartbeat.hpp"
-#include "wifi.hpp"
+//#include "heartbeat.hpp"
+//#include "wifi.hpp"
 
 
 Door door;
@@ -13,12 +13,10 @@ void setup()
 {
   pinMode(LED_BUILTIN, OUTPUT);
   Serial.begin(115200); 
-  pinMode(buzzer, OUTPUT);
-  pinMode(micPin, INPUT);
 
   //imu_init();
 
-  wifiSetup();
+  //wifiSetup();
 
   //knockCalibrate(baselineAcc);
   
@@ -30,9 +28,9 @@ void setup()
 
 void loop()
 {
-  heartbeat(500); //used to debug
+  //heartbeat(500); //used to debug
   door.run();
-}
+
   //heartbeat(500); //used to debug
   //Serial.print("baseline is main ");
   //madgwick();
@@ -52,8 +50,8 @@ void loop()
   //   doorBell(buzzer);
   // }
   
-  char message[200] = {0};
-  sendMessage('k');
+  //char message[200] = {0};
+  //sendMessage('k');
 
  
 }

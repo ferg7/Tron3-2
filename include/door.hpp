@@ -2,8 +2,8 @@
 
 #include <Arduino.h>
 #include "hardware/imu.hpp"
-#include "hardware/ultrasonic.hpp"
-#include "hardware/pir.hpp"
+//#include "hardware/ultrasonic.hpp"
+//#include "hardware/pir.hpp"
 
 
 
@@ -21,15 +21,16 @@ class Door
 
         int buzzer, micPin;
 
-        float baslineX, baslineY, BaselineZ;
+        float baselineX, baselineY, baselineZ;
 
         unsigned long distance;
 
-        PIR *pir;
+        //PIR *pir;
         IMUclass* imu;
 
         void door_state();
-        void knock();
+        boolean knock();
         void knockCalibrate();
+        boolean detectVibration();
         void doorBell();
 };

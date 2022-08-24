@@ -2,18 +2,20 @@
 
 Door::Door()
 {
-    pir = new PIR();
+    //pir = new PIR();
     imu = new IMUclass();
-    knockCalibrate();
+    //knockCalibrate();
 
     buzzer = 2;
     micPin = 3;
+    pinMode(buzzer, OUTPUT);
+    pinMode(micPin, INPUT);
 
 }
 
 Door::~Door()
 {
-    delete pir;
+    //delete pir;
     delete imu;
 }
 
@@ -21,24 +23,25 @@ void Door::run()
 {
     //imu->madgwick();
     door_state();
-    knock();
+    //knock();
     
     //required for the visualiser
-    Serial.print("Pitch:\t"); Serial.println(pitch);
+    Serial.print("Pitch:\t"); 
+    //required for the visualiser
     Serial.print("Roll:\t"); Serial.println(roll);
     Serial.print("Yaw:\t"); Serial.println(yaw);
     Serial.println();
 
     //can send this data to visualiser.
-    Serial.print("Sonar Distance:\t"); Serial.println(distance);
+    //Serial.print("Sonar Distance:\t"); Serial.println(distance);
 }
 
 void Door::door_state()
 {
-    
+    imu->readAccel();
 }
 
-void Door::knock()
+boolean Door::knock()
 {
     boolean firstKnock =  detectVibration();
     if (firstKnock){
