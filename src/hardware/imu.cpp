@@ -24,11 +24,11 @@ void IMUclass::readAccel(Eigen::Vector3d * accels)
 {
     //need to check this
     madgwick();
-    Eigen::AngleAxisd rollAngle(roll, Eigen::Vector3d::UnitZ());
-    Eigen::AngleAxisd yawAngle(yaw, Eigen::Vector3d::UnitY());
-    Eigen::AngleAxisd pitchAngle(pitch, Eigen::Vector3d::UnitX());
+    Eigen::AngleAxisd rollAngle(roll, Eigen::Vector3d::UnitX());
+    Eigen::AngleAxisd yawAngle(yaw, Eigen::Vector3d::UnitZ());
+    Eigen::AngleAxisd pitchAngle(pitch, Eigen::Vector3d::UnitY());
 
-    Eigen::Quaternion<double> q = rollAngle * yawAngle * pitchAngle;
+    Eigen::Quaternion<double> q = yawAngle * pitchAngle * rollAngle;
 
     Eigen::Matrix3d rotationMatrix = q.matrix();
 
