@@ -16,9 +16,15 @@ void imu_init()
         Serial.println("Failed to initialise");
         return;
     }
+<<<<<<< HEAD:src/hardware/imu.cpp
     float sample_rate = IMU.accelerationSampleRate();
     filter.begin(sample_rate);
     delay(1000);
+=======
+    Serial.begin(115200); 
+    //filter.begin(1);//altering this helps
+    //delay(1000);
+>>>>>>> feature/knock:src/imu.cpp
 }
 
 void readGyro()
