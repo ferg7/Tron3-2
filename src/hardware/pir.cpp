@@ -1,5 +1,5 @@
- #include <Arduino.h>
- #include "hardware/pir.hpp"
+#include <Arduino.h>
+#include "hardware/pir.hpp"
 
 int led = 13;                // the pin that the LED is atteched to
 int sensor = 2;              // the pin that the sensor is atteched to
