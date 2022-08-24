@@ -1,10 +1,8 @@
 #include <Arduino.h>
-<<<<<<< HEAD
 #include "hardware/heartbeat.hpp"
 #include "door.hpp"
 
 Door door;
-=======
 #include "heartbeat.hpp"
 #include "imu.hpp"
 #include "wifi.hpp"
@@ -15,13 +13,13 @@ float baselineAcc[3] = {0};
 boolean knock = false;
 const int buzzer = 2;
 const int micPin = 3;
->>>>>>> feature/knock
 
 void setup()
 {
   pinMode(LED_BUILTIN, OUTPUT);
 <<<<<<< HEAD
   Serial.begin(115200); 
+<<<<<<< HEAD
   imu_init();
 =======
   pinMode(buzzer, OUTPUT);
@@ -37,6 +35,8 @@ void setup()
   //calibrate();
 
 >>>>>>> feature/knock
+=======
+>>>>>>> feature/door-open-detection
 }
 
 
