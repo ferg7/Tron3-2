@@ -3,6 +3,7 @@
 #include <Arduino_LSM6DS3.h>
 #include "SensorFusion.h" //SF
 #include <MadgwickAHRS.h>
+#include <ArduinoEigenDense.h>
 
 class IMUclass
 {
@@ -10,13 +11,9 @@ class IMUclass
     public:
         IMUclass();
         ~IMUclass();
-        void readAccel();
-        void mahony();
-        void madgwick();
-
+        void readAccel(Eigen::Vector3d * accels);
 
     private:
-        void calibrate();   
         
         SF* fusion;
         Madgwick* filter;
@@ -25,5 +22,8 @@ class IMUclass
         float x, y, z;
         float deltat;
         float roll, pitch, yaw;
+
+        void mahony();
+        void madgwick();
 
 };

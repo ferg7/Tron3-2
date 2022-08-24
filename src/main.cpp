@@ -1,18 +1,17 @@
 #include <Arduino.h>
 #include "hardware/heartbeat.hpp"
 #include "door.hpp"
-
-//#include "heartbeat.hpp"
 //#include "wifi.hpp"
 
-
-Door door;
-
+Door* door = NULL;
 
 void setup()
 {
   pinMode(LED_BUILTIN, OUTPUT);
-  Serial.begin(115200); 
+  Serial.begin(9600); 
+
+  door = new Door();
+  
 
   //imu_init();
 
@@ -29,7 +28,7 @@ void setup()
 void loop()
 {
   //heartbeat(500); //used to debug
-  door.run();
+  door->run();
 
   //heartbeat(500); //used to debug
   //Serial.print("baseline is main ");

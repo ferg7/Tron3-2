@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 #include "hardware/imu.hpp"
+#include <ArduinoEigenDense.h>
 //#include "hardware/ultrasonic.hpp"
 //#include "hardware/pir.hpp"
 
@@ -27,6 +28,8 @@ class Door
 
         //PIR *pir;
         IMUclass* imu;
+        
+        Eigen::Vector3d accels;
 
         void door_state();
         boolean knock();

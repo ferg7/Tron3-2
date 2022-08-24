@@ -1,5 +1,4 @@
 #include "hardware/imu.hpp"
-#include <ArduinoEigenDense.h>
 
 IMUclass::IMUclass()
 {
@@ -21,7 +20,7 @@ IMUclass::~IMUclass()
 }
 
 
-void IMUclass::readAccel()
+void IMUclass::readAccel(Eigen::Vector3d * accels)
 {
     //need to check this
     madgwick();
@@ -39,48 +38,10 @@ void IMUclass::readAccel()
     accel << ax, ay, az;
     accel = rotationMatrix*accel; //rotate to World frame
 
-    Eigen::Vector2d planar_accel;
-    planar_accel << accel[0], accel[1];
-    if(planar_accel.norm() > 1)//needs some thresholding
-    {
-        //DOOR OPEN
-        Serial.println("OPEN");
-    }
+    *accels << accel;
 
     //grab the acceleration vector 
 
-}
-
-void IMUclass::calibrate()
-{
-    if (IMU.accelerationAvailable()) {
-        IMU.readAcceleration(ax, ay, az);
-    }
-    if (IMU.gyroscopeAvailable()) {
-        IMU.readGyroscope(gx, gy, gz);
-    }
-
-    gx = gx*DEG_TO_RAD;
-    gy = gy*DEG_TO_RAD;
-    gz = gz*DEG_TO_RAD;
-
-    deltat = fusion->deltatUpdate(); //this have to be done before calling the fusion update
-    //choose only one of these two:
-    fusion->MahonyUpdate(gx, gy, gz, ax, ay, az, deltat); 
-
-
-    float sum = 0;
-
-    for(int i = 0; i < 10; i++){
-        fusion->MahonyUpdate(gx, gy, gz, ax, ay, az, deltat);
-        sum += fusion->getYaw();
-    }
-
-    //original = sum/10;
-    
-    //Serial.print("Original ="); Serial.println(original);
-    delay(10);
-    
 }
 
 

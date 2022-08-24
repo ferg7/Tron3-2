@@ -1,5 +1,6 @@
 #include "door.hpp"
 
+
 Door::Door()
 {
     //pir = new PIR();
@@ -10,6 +11,8 @@ Door::Door()
     micPin = 3;
     pinMode(buzzer, OUTPUT);
     pinMode(micPin, INPUT);
+
+    accels << 0,0,0;
 
 }
 
@@ -26,19 +29,34 @@ void Door::run()
     //knock();
     
     //required for the visualiser
-    Serial.print("Pitch:\t"); 
-    //required for the visualiser
-    Serial.print("Roll:\t"); Serial.println(roll);
-    Serial.print("Yaw:\t"); Serial.println(yaw);
-    Serial.println();
-
     //can send this data to visualiser.
     //Serial.print("Sonar Distance:\t"); Serial.println(distance);
 }
 
 void Door::door_state()
 {
-    imu->readAccel();
+
+    int count = 100;
+    float planar_avg, planar_sum = 0;
+
+
+    Eigen::Vector2d planar_accel;
+
+    for(int i = 0; i < count; i++){
+        imu->readAccel(&accels);
+        planar_accel << accels[0], accels[1];
+        Serial.println(accels[0]);
+        Serial.println(accels[1]);
+        Serial.println(accels[2]);
+        delay(10);
+        planar_sum += planar_accel.norm();
+    }
+
+    planar_avg = planar_sum/100;
+
+    Serial.print("Planar AVG:\t"); Serial.println(planar_avg);
+    Serial.println();
+
 }
 
 boolean Door::knock()
