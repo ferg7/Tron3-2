@@ -11,7 +11,8 @@ class IMUclass
     public:
         IMUclass();
         ~IMUclass();
-        void readAccel(Eigen::Vector3d * accels);
+        float readAccel(Eigen::Vector3d* g_bias, Eigen::Vector3d* gyr);
+        void calibrate();
 
     private:
         
@@ -23,7 +24,13 @@ class IMUclass
         float deltat;
         float roll, pitch, yaw;
 
+        Eigen::Vector3d g_bias;
+        Eigen::Vector3d w_bias;
+
         void mahony();
         void madgwick();
+
+        float time, diff;
+
 
 };

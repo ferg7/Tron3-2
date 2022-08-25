@@ -11,7 +11,14 @@ IMUclass::IMUclass()
     }
     float sample_rate = IMU.accelerationSampleRate();
     filter->begin(sample_rate);
-    delay(1000);
+    delay(100);
+
+    Eigen::Vector3d gb, wb;
+    gb << 0,0,0;
+    wb << 0,0,0;
+    g_bias = gb;
+    w_bias = wb;
+
 }
 
 IMUclass::~IMUclass()
@@ -19,28 +26,90 @@ IMUclass::~IMUclass()
 
 }
 
+void IMUclass::calibrate()
+{
+    int count = 100;
+    double bias_gx = 0, bias_gy = 0, bias_gz = 0;
+    double bias_wx = 0, bias_wy = 0, bias_wz = 0;
 
-void IMUclass::readAccel(Eigen::Vector3d * accels)
+    for(int i = 0; i < count; i++){
+        if (IMU.accelerationAvailable()) {
+            IMU.readAcceleration(ax, ay, az);
+        }
+        if (IMU.gyroscopeAvailable()) {
+            IMU.readGyroscope(gx, gy, gz);
+        }
+
+        bias_gx += ax;
+        bias_gy += ay;
+        bias_gz += az;
+
+        bias_wx += gx;
+        bias_wy += gy;
+        bias_wz += gz;
+    }
+
+    g_bias[0] = bias_gx/count;
+    g_bias[1] = bias_gy/count;
+    g_bias[2] = bias_gz/count;
+
+    w_bias[0] = bias_wx/count;
+    w_bias[1] = bias_wy/count;
+    w_bias[2] = bias_wz/count;
+
+    g_bias = -1*g_bias;
+    w_bias = -1*w_bias;
+
+    diff = 0;
+
+    delay(100);
+    Serial.print(g_bias[0]);Serial.print("\t");
+    Serial.print(g_bias[1]);Serial.print("\t");
+    Serial.print(g_bias[2]);Serial.println();
+
+    Serial.print(w_bias[0]);Serial.print("\t");
+    Serial.print(w_bias[1]);Serial.print("\t");
+    Serial.print(w_bias[2]);Serial.println();
+    
+}
+
+
+float IMUclass::readAccel(Eigen::Vector3d* gb, Eigen::Vector3d* gyr)
 {
     //need to check this
-    madgwick();
-    Eigen::AngleAxisd rollAngle(roll, Eigen::Vector3d::UnitX());
-    Eigen::AngleAxisd yawAngle(yaw, Eigen::Vector3d::UnitZ());
-    Eigen::AngleAxisd pitchAngle(pitch, Eigen::Vector3d::UnitY());
+    float current_time;
 
-    Eigen::Quaternion<double> q = yawAngle * pitchAngle * rollAngle;
+    if (IMU.accelerationAvailable()) {
+        IMU.readAcceleration(ax, ay, az);
+    }
+    if (IMU.gyroscopeAvailable()) {
+        IMU.readGyroscope(gx, gy, gz);
+    }
+    
+    current_time = millis();
+    
+    if(diff == 0){
+        diff = 0.01;
+    }else{
+        diff = current_time - time; //time interval
+    }
 
-    Eigen::Matrix3d rotationMatrix = q.matrix();
+    time = current_time;
 
-    q.normalize();
+    Eigen::Vector3d acc;
 
-    Eigen::Vector3d accel;
-    accel << ax, ay, az;
-    accel = rotationMatrix*accel; //rotate to World frame
+    acc << ax, ay, az;
+    *gyr << gx, gy, gz;
+    
+    acc = acc+g_bias;
+    *gyr = *gyr+w_bias;
 
-    *accels << accel;
+    *gb << g_bias;
+
+    delay(100);
 
     //grab the acceleration vector 
+    return diff;
 
 }
 
@@ -66,6 +135,7 @@ void IMUclass::mahony()
     p = fusion->getPitch();
     r = fusion->getRoll();    //you could also use getRollRadians() ecc
     y = fusion->getYaw();
+
 
     pitch = p;
     roll = r;

@@ -13,8 +13,6 @@ void setup()
   door = new Door();
   
 
-  //imu_init();
-
   //wifiSetup();
 
   //knockCalibrate(baselineAcc);

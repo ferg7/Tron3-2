@@ -2,7 +2,6 @@
 
 #include <Arduino.h>
 #include "hardware/imu.hpp"
-#include <ArduinoEigenDense.h>
 //#include "hardware/ultrasonic.hpp"
 //#include "hardware/pir.hpp"
 
@@ -27,13 +26,16 @@ class Door
         unsigned long distance;
 
         //PIR *pir;
-        IMUclass* imu;
-        
-        Eigen::Vector3d accels;
+        IMUclass* imu = NULL;
+
 
         void door_state();
         boolean knock();
         void knockCalibrate();
         boolean detectVibration();
         void doorBell();
+
+        bool closed;
+        
+        int dir_to_open;
 };

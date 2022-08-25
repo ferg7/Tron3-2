@@ -1,18 +1,26 @@
 #include "door.hpp"
 
-
 Door::Door()
 {
     //pir = new PIR();
+
+    delay(2000);
     imu = new IMUclass();
+    Serial.println("OK");
+
     //knockCalibrate();
 
     buzzer = 2;
     micPin = 3;
     pinMode(buzzer, OUTPUT);
     pinMode(micPin, INPUT);
+    delay(3000);
+    imu->calibrate();
 
-    accels << 0,0,0;
+    delay(10);
+    closed = true;
+
+    dir_to_open = 0;
 
 }
 
@@ -26,7 +34,9 @@ void Door::run()
 {
     //imu->madgwick();
     door_state();
-    //knock();
+    if(closed == true){
+        knock();
+    }
     
     //required for the visualiser
     //can send this data to visualiser.
@@ -35,27 +45,61 @@ void Door::run()
 
 void Door::door_state()
 {
+    Eigen::Vector3d g_bias, gyr;
+    double diff;
+    diff = imu->readAccel(&g_bias, &gyr);
+    //update closed or open status
 
-    int count = 100;
-    float planar_avg, planar_sum = 0;
+    int sum = 0;
 
+    double res = gyr.dot(g_bias);
+    double omega = gyr.norm()*diff;
+   
+    Serial.println(omega);
 
-    Eigen::Vector2d planar_accel;
+    if(omega > 700)
+    {
+        if(dir_to_open == 0){
+            if(res > 0){
+                dir_to_open = 1;
+            }else{
+                dir_to_open = -1;
+            }
+        }
 
-    for(int i = 0; i < count; i++){
-        imu->readAccel(&accels);
-        planar_accel << accels[0], accels[1];
-        Serial.println(accels[0]);
-        Serial.println(accels[1]);
-        Serial.println(accels[2]);
-        delay(10);
-        planar_sum += planar_accel.norm();
+        for(int i = 0; i < 100; i++)
+        {
+            diff = imu->readAccel(&g_bias, &gyr);
+            //update closed or open status
+            res = gyr.dot(g_bias);
+            omega = gyr.norm()*diff;
+
+            if(omega > 500){
+                if(dir_to_open > 0 && res > 0){
+                    //opening
+                    sum += 1;
+                }
+                if(dir_to_open < 0 && res > 0){
+                    sum -= 1;
+                }
+                
+                if(dir_to_open < 0 && res < 0){
+                    sum += 1;
+                }
+                if(dir_to_open > 0 && res < 0){
+                    sum -= 1;
+                }
+            }
+        }
+
+        if(sum > 0){
+            closed = false;
+            Serial.println("DOOR OPEN");
+        }else{
+            closed = true;
+            Serial.println("DOOR CLOSED");
+        }
     }
-
-    planar_avg = planar_sum/100;
-
-    Serial.print("Planar AVG:\t"); Serial.println(planar_avg);
-    Serial.println();
 
 }
 
